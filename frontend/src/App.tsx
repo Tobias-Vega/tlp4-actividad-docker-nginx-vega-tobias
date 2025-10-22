@@ -1,34 +1,66 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react'
 import './App.css'
+import TaskList from './components/TaskList'
+import TaskForm from './components/TaskForm'
+import type { Task } from './types/task'
+import { tasksApi } from './services/tasksApi'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [editing, setEditing] = useState<Task | null>(null)
+  const [tasks, setTasks] = useState<Task[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const load = async () => {
+    setLoading(true)
+    try {
+      const data = await tasksApi.list()
+      setTasks(data)
+    } catch (err: any) {
+      setError(err.message || String(err))
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => { void load() }, [])
+
+  const handleSaved = (task: Task) => {
+    setEditing(null)
+    setTasks((prev) => {
+      const exists = prev.find((t) => t.id === task.id)
+      if (exists) return prev.map((t) => (t.id === task.id ? task : t))
+      return [task, ...prev]
+    })
+  }
+
+  const handleRemove = async (id: string) => {
+    await tasksApi.remove(id)
+    setTasks((prev) => prev.filter((t) => t.id !== id))
+  }
+
+  const handleToggle = async (task: Task) => {
+    const updated = await tasksApi.update(task.id, { status: task.status === 'pending' ? 'completed' : 'pending' })
+    setTasks((prev) => prev.map((t) => (t.id === updated.id ? updated : t)))
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div>
+      <h1>Gestor de Tareas</h1>
+      <TaskForm
+        task={editing}
+        onSaved={handleSaved}
+        onCancel={() => setEditing(null)}
+      />
+      <TaskList
+        tasks={tasks}
+        onEdit={(t) => setEditing(t)}
+        onRemove={handleRemove}
+        onToggle={handleToggle}
+        loading={loading}
+        error={error}
+      />
+    </div>
   )
 }
 
