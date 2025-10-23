@@ -1,6 +1,6 @@
 import type { Task } from '../types/task'
 
-const base = `http://localhost:3000/api/tasks`
+const base = `/api/tasks`
 
 async function requestRaw(input: string, init?: RequestInit) {
   const res = await fetch(input, { headers: { 'Content-Type': 'application/json' }, ...init })
