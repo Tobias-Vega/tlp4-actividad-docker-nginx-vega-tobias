@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import type { TaskService } from "../services/tasks.service.js";
-import type { CreateTaskDto } from "../dtos/create-task.dto.js";
+import type { TaskService } from "../services/tasks.service";
+import type { CreateTaskDto } from "../dtos/create-task.dto";
 
 
 export class TaskController {

@@ -1,7 +1,7 @@
-import type { CreateTaskDto } from "../dtos/create-task.dto.js";
-import type { UpdateTaskDto } from "../dtos/update-task.dto.js";
-import type { ITaks } from "../interfaces/tasks.interface.js";
-import { TaskModel } from "../models/tasks.model.js";
+import type { CreateTaskDto } from "../dtos/create-task.dto";
+import type { UpdateTaskDto } from "../dtos/update-task.dto";
+import type { ITaks } from "../interfaces/tasks.interface";
+import { TaskModel } from "../models/tasks.model";
 
 export class TaskService {
 

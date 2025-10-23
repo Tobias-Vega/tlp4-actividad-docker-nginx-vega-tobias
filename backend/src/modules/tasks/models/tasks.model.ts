@@ -1,6 +1,6 @@
 import { model, Schema } from "mongoose";
-import type { ITaks } from "../interfaces/tasks.interface.js";
-import { TasksStatus } from "../interfaces/tasks-status.enum.js";
+import type { ITaks } from "../interfaces/tasks.interface";
+import { TasksStatus } from "../interfaces/tasks-status.enum";
 
 const taskSchema = new Schema<ITaks>({
   title: { type: String, required: true },

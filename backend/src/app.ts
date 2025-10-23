@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-import taskRouter from './modules/tasks/routes/task.router.js';
+import taskRouter from './modules/tasks/routes/task.router';
 
 export const createApp = () => {
   const app = express();

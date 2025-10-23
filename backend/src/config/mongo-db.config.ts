@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import type { IDatabase } from "../database/interfaces/database.interface.js";
-import envs from "./envs.config.js";
+import type { IDatabase } from "../database/interfaces/database.interface";
+import envs from "./envs.config";
 
 export class MongoConfig implements IDatabase {
 

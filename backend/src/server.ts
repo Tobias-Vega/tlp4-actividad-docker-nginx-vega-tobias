@@ -1,7 +1,7 @@
-import { createApp } from "./app.js";
-import envs from "./config/envs.config.js";
-import { MongoConfig } from "./config/mongo-db.config.js";
-import { ConnectDB } from "./database/interfaces/connect-db.js";
+import { createApp } from "./app";
+import envs from "./config/envs.config";
+import { MongoConfig } from "./config/mongo-db.config";
+import { ConnectDB } from "./database/interfaces/connect-db";
 
 async function start() {
 
