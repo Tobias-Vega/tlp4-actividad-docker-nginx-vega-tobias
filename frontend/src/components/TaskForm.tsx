@@ -1,28 +1,26 @@
 import { useEffect, useState } from 'react'
 import type { Task } from '../types/task'
 import { tasksApi } from '../services/tasksApi'
+import './TaskStyles.css'
 
 type Props = {
   task?: Task | null
   onSaved?: (task: Task) => void
-  onCancel?: () => void
 }
-
-export default function TaskForm({ task, onSaved, onCancel }: Props) {
+export default function TaskForm({ task, onSaved }: Props) {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [status, setStatus] = useState<Task['status']>('pending')
   const [saving, setSaving] = useState(false)
 
   useEffect(() => {
     if (task) {
       setTitle(task.title)
       setDescription(task.description || '')
-      setStatus(task.status)
+      // status is managed by the backend; do not expose in the form
     } else {
       setTitle('')
       setDescription('')
-      setStatus('pending')
+      // default status will be set by backend
     }
   }, [task])
 
@@ -31,10 +29,10 @@ export default function TaskForm({ task, onSaved, onCancel }: Props) {
     setSaving(true)
     try {
       if (task) {
-        const updated = await tasksApi.update(task.id, { title, description, status })
+        const updated = await tasksApi.update(task.id, { title, description })
         onSaved?.(updated)
       } else {
-        const created = await tasksApi.create({ title, description, status })
+        const created = await tasksApi.create({ title, description })
         onSaved?.(created)
       }
     } finally {
@@ -43,25 +41,17 @@ export default function TaskForm({ task, onSaved, onCancel }: Props) {
   }
 
   return (
-    <form onSubmit={submit} style={{ border: '1px solid #ddd', padding: 12, marginBottom: 12 }}>
-      <div>
-        <label>Título</label>
-        <input required value={title} onChange={(e) => setTitle(e.target.value)} />
+    <form onSubmit={submit} className="tp-form">
+      <div className="tp-field">
+        <label className="tp-label">Título</label>
+        <input className="tp-input" required value={title} onChange={(e) => setTitle(e.target.value)} />
       </div>
-      <div>
-        <label>Descripción</label>
-        <input value={description} onChange={(e) => setDescription(e.target.value)} />
+      <div className="tp-field">
+        <label className="tp-label">Descripción</label>
+        <input className="tp-input" value={description} onChange={(e) => setDescription(e.target.value)} />
       </div>
-      <div>
-        <label>Estado</label>
-        <select value={status} onChange={(e) => setStatus(e.target.value as Task['status'])}>
-          <option value="pending">Pendiente</option>
-          <option value="completed">Completado</option>
-        </select>
-      </div>
-      <div style={{ marginTop: 8 }}>
-        <button type="submit" disabled={saving}>{saving ? 'Guardando...' : 'Guardar'}</button>
-        {onCancel && <button type="button" onClick={onCancel}>Cancelar</button>}
+      <div className="tp-actions">
+        <button className="tp-btn tp-btn-primary" type="submit" disabled={saving}>{saving ? 'Guardando...' : 'Guardar'}</button>
       </div>
     </form>
   )

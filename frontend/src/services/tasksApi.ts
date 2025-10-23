@@ -30,8 +30,10 @@ export const tasksApi = {
     const data = await requestRaw(`${base}/${id}`)
     return normalizeTask(data)
   },
-  create: async (payload: Omit<Task, 'id'>): Promise<Task> => {
-    const body = { ...payload, status: String(payload.status).toUpperCase() }
+  // payload.status is optional; backend will default to pending when omitted
+  create: async (payload: Omit<Task, 'id'> & Partial<Pick<Task, 'status'>>): Promise<Task> => {
+    const body: any = { ...payload }
+    if (body.status) body.status = String(body.status).toUpperCase()
     const data = await requestRaw(base, { method: 'POST', body: JSON.stringify(body) })
     return normalizeTask(data)
   },

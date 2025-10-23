@@ -50,7 +50,6 @@ function App() {
       <TaskForm
         task={editing}
         onSaved={handleSaved}
-        onCancel={() => setEditing(null)}
       />
       <TaskList
         tasks={tasks}
